@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="static/js/echarts.min.js"></script>
+    <script src="static/js/jquery-3.4.0.js"></script>
+</head>
+<body>
+<div id="detailImage" class="layui-row" style="width: 1200px; height: 900px;"></div>
+<script>
+    $(document).ready(function () {
+        var detailChart = echarts.init(document.getElementById('detailImage'));
+        detailChart.showLoading();
+
+        $.ajax({
+            url: 'static/data/mynodes.json',
+            type: 'GET',
+            success: function (res) {
+                detailChart.hideLoading();
+
+                detailChart.setOption({
+                    title: {
+                        text: 'Les Miserables',
+                        subtext: 'Default layout',
+                        top: 'top',
+                        left: 'center'
+                    },
+                    tooltip: {},
+                    animation: true,
+                    animationDuration: 1500,
+                    animationEasingUpdate: 'quinticInOut',
+                    series: [{
+                        name: 'Les Miserables',
+                        type: 'graph',
+                        layout: 'none',
+                        symbol: 'circle',
+                        edgeSymbol: ['none', 'arrow'],
+                        data: res.nodes,
+                        links: res.links,
+                        categories: res.categories,
+                        roam: true,
+                        label: {
+                            position: 'right',
+                            formatter: '{b}'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            curveness: 0.3
+                        },
+                        emphasis: {
+                            focus: 'adjacency',
+                            lineStyle: {
+                                width: 5
+                            }
+                        }
+                    }]
+                });
+            },
+            error: function () {
+                alert('获取信息失败~');
+            }
+        });
+    });
+</script>
+</body>
+</html>
